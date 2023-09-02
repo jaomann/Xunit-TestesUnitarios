@@ -12,6 +12,7 @@ using UnitTest.Feature;
 using Moq.AutoMock;
 using Microsoft.Extensions.Logging;
 using UnitTest.Core.Integration;
+using UnitTest.Feature.Fixtures;
 
 namespace UniteTest.Tests
 {
@@ -22,13 +23,8 @@ namespace UniteTest.Tests
         void ProdutoService_RegistraPedido_Deve_Cancelar()
         {
             //Arrange
-            var produto = new Faker<Produtos>().CustomInstantiator(f => new Produtos(
-                f.Commerce.ProductName(),
-                "5288",
-                DateTime.Now.AddYears(-1),
-                DateTime.Now.AddYears(2),
-                Categoria.Alcoolico,
-                2)).Generate();
+            var fixture = Mocker.CreateInstance<ProdutoFixture>();
+            var produto = fixture.AdicionarProdutoValido();
             var produtoService = Mocker.CreateInstance<ProdutoService>();
             var token = new CancellationToken(true);
             var produtoRepos = new Mock<IProdutoRepository>();
@@ -45,13 +41,9 @@ namespace UniteTest.Tests
         public void ProdutoService_RegistraPedido_Deve_InValidar_Produto()
         {
             //Arrange
-            var produto = new Faker<Produtos>().CustomInstantiator(f => new Produtos(
-                f.Commerce.ProductName(),
-                "5288",
-                DateTime.Now.AddYears(-1),
-                DateTime.Now,
-                Categoria.Alcoolico,
-                2)).Generate();
+            var fixture = Mocker.CreateInstance<ProdutoFixture>();
+            var produto = fixture.AdicionarProdutoInvalido();
+
             var produtoRepos = new Mock<IProdutoRepository>();
             var factory = new Mock<IFactoryIntegration>();
             var logger = new Mock<ILogger<ProdutoService>>();
@@ -69,13 +61,8 @@ namespace UniteTest.Tests
         public void ProdutoService_RegistraPedido_Deve_Validar_Produto()
         {
             //Arrange
-            var produto = new Faker<Produtos>().CustomInstantiator(f => new Produtos(
-                f.Commerce.ProductName(),
-                "5288",
-                DateTime.Now.AddYears(-1),
-                DateTime.Now.AddYears(2),
-                Categoria.Alcoolico,
-                2)).Generate();
+            var fixture = Mocker.CreateInstance<ProdutoFixture>();
+            var produto = fixture.AdicionarProdutoValido();
 
             var produtoRepos = new Mock<IProdutoRepository>();
             var factory = new Mock<IFactoryIntegration>();
@@ -95,13 +82,8 @@ namespace UniteTest.Tests
         public void ProdutoRepository_BuscaPorSKU_Deve_Retornar_Produto()
         {
             //Arrange
-            var produto = new Faker<Produtos>().CustomInstantiator(f => new Produtos(
-                "Coccaa",
-                "258",
-                DateTime.Now.AddYears(-3),
-                DateTime.Now.AddYears(3),
-                Categoria.Isotonico,
-                3)).Generate();
+            var fixture = Mocker.CreateInstance<ProdutoFixture>();
+            var produto = fixture.AdicionarProdutoValido();
 
             var produtoRepos = new Mock<IProdutoRepository>();
             var factory = new Mock<IFactoryIntegration>();
